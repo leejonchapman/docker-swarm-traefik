@@ -1,8 +1,8 @@
 version: '3.5'
 services:
   software:
-    image: traefik:v1.7.15  
-    command: --docker.domain=leejonchapman.com --acme.email=me@leejonchapman.com 
+    image: traefik:v1.7.20 
+    command: --docker.domain=leejonchapman.com --acme.email=me@leejonchapman.com  --docker.watch --docker.swarmmode 
     networks: 
       - internal
     ports:
@@ -21,7 +21,10 @@ services:
         traefik.frontend.rule: "Host:traefik.leejonchapman.com"
         traefik.frontend.auth.basic.usersFile: "/basic_auth"
         traefik.docker.network: "internal"
-#   restart: unless-stopped
+      placement:
+        constraints:
+          - node.role == manager
+      replicas: 1
     #watchtower:
     #image: v2tec/watchtower
     #command: --interval 900 --label-enable --cleanup
